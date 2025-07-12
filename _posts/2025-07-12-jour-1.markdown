@@ -127,3 +127,7 @@ Dans l'Inspector :
 ## Conclusion
 
 Tout ça pour dire que j'ai mis dix heures à afficher deux phrases l'une après l'autre. J'ai le début d'un système assez robuste et modulable... **Mais à quel prix ?**
+
+Ah et au fait il ressemble à quoi le jeu après tout ce travail ?
+A ça :
+![Screenshot très affolant de Saltwater]({{ "/assets/images/saltwater-v1-text.png" | relative_url }})
