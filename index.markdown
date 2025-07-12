@@ -2,24 +2,23 @@
 layout: default
 ---
 
-# Soliloque
+# Nouvel an, nouvelle ère
 
-Hiver deux mille je sais pas combien ; c'était avant le COVID. La fin d'année a cette odeur bleue qui fout des larmes quand on respire trop fort. Plus rien ne m'intéresse au travail.
-J'ai alors cet élan qui nous traverse tous lorsque le compteur de l'année repasse à zéro ; ça me frappe violemment, je dois agir et vite.
+Hiver deux mille je sais pas combien ; c'était avant le COVID. Plus rien ne m'intéresse vraiment, je m'ennuie.
+J'ai alors cet élan qui nous traverse tous lorsque le compteur de l'année repasse à zéro ; ça me frappe violemment, une _bonne résolution_ : je **dois** bosser sur un jeu.
 
-Je vais bosser sur un jeu.
+Au fond de moi je sais bien que cette impulsion de mènera pas à grand chose. Parce qu'écrire est trop long, et trop douloureux. Parce qu'il me manque toutes les connaissances techniques, ou presque. Et comme attendu, je n'honore pas la promesse que je me suis faite.
 
-Au fond de moi je savais bien que je n'irais pas. Qu'écrire est trop long, et trop douloureux. Que je pars de presque rien sur le plan technique. Donc, je n'ai jamais honoré la promesse que je m'étais faite.
+Puis vient juillet 2025. Et je me rends compte... En fait, j'ai bossé.
+En fait, j'ai une idée simple, une belle histoire à raconter, que je mâche et digère en boucle depuis tout ce temps. J'ai des post-its sur les murs. Qu'est-ce qui me bloque, **vraiment** ?
+Oui, l'écriture est douloureuse.
+Oui, je suis perdu sur Unity.
+Oui, il me reste des millions de questions.
 
-Puis vient juillet 2025. En fait, j'ai bossé. En fait, j'ai un jeu simple, une belle histoire à raconter, que je mâche et digère en boucle depuis tout ce temps. Sur le mur sous mes yeux, j'ai collé des post its. Ce sont les points centraux de l'histoire. Ils prennent la poussière car je suis lent. Mais j'y pense.
-Et l'écriture est douloureuse.
-Et Unity est insupportable (ou plutôt je ne connais pas assez).
-Et j'ai encore mille millions de questions.
-
-Mais je mets tout ça à la poubelle.
+Mais tout ça, c'est rien.
 Saltwater va sortir.
 
-De toute façon c'est ça ou je vais à la plage et je nage dans la mer jusqu'à couler.
+_C'est ma lueur à l'horizon._
 
 ---
 
