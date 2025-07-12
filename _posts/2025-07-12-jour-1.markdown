@@ -1,0 +1,129 @@
+---
+layout: post
+title:  "Jour 1"
+date:   2025-07-12 06:30:00 +0100
+---
+
+Dans [The Mythical Man-Month](https://en.wikipedia.org/wiki/The_Mythical_Man-Month), Fred Brooks compare l'exercice du métier d'ingénieur informatique aux animaux sauvages qui se battent dans une fosse à goudron.
+
+Que ce premier billet serve d'exemple.
+
+## Faisons simple
+
+Une des raisons pour lesquelles je suis resté bloqué tant d'années c'est que j'ai toujours considéré qu'il me manquait un designer. Un dessinateur. Une vision. Je suppose que l'[aphantasie](https://fr.wikipedia.org/wiki/Aphantasie) n'aide pas.
+Mais **justement**, une de mes résolutions récentes est simple : si je suis bloqué, j'ignore, et je fais autre chose.
+
+Construire un jeu est tâche titanesque. La fosse à goudron, je **vais** la traverser. Mais en attendant, _faisons simple_
+Et simple c'est ça :
+![Screenshot affolant de Saltwater]({{ "/assets/images/saltwater-v1.png" | relative_url }})
+
+Faut avoir la vision j'admets.
+Le carré rouge, c'est votre personnage. Tout le bleu autour, c'est sur Unity, par défaut, quand y a rien.
+Donc... **Y a rien**.
+
+## Juste un peu de texte
+
+Bon il s'avère que cette scène représente un personnage qui regarde vers l'océan. Il se parle à lui même. Alors naturellement, j'ai voulu afficher du texte, et enchaîner des répliques.
+Qui l'eut cru, cette mission allait me prendre dix heures.
+
+### Mes besoins
+
+Voilà comment je voyais les choses :
+- Chaque ligne de dialogue doit pouvoir décider **elle-même** de son déclencheur d'affichage
+- Je veux configurer ça visuellement dans l'éditeur Unity, pas en dur dans le code
+- Les systèmes externes (portes qui s'ouvrent, ennemis qui meurent) ne doivent rien savoir du système de dialogue
+
+Simple, non ?
+**Non.**
+
+### Unity vs. Ma vision du monde
+
+Unity propose les `UnityEvent` - un système d'événements configurable dans l'inspecteur. Parfait ! Sauf qu'Unity fonctionne comme ça : "L'événement définit qui il appelle"
+Moi je voulais : "L'objet décide à quoi il s'abonne".
+
+Et j'ai pris des heures, ne serait-ce qu'à m'en rendre compte. Pour moi c'était **évident** qu'il incombait au "souscripteur" de s'inscrire à un événement. Eh bien non, pour des raisons _apparemment_ techniques, ce n'est simplement pas possible.
+
+J'ai passé des heures à chercher des solutions... Voici un petit florilège de cette **perte de temps atroce**.
+
+#### Tentative #1 : La naïveté pure
+
+```csharp
+public class DialogueLine {
+   public UnityEvent startEvent; // Je vais connecter ça au manager !
+}
+```
+
+**L'idée** : chaque ligne a son propre événement, je vais somehow les connecter au manager.
+
+**Résultat** : On ne peut pas "connecter" des UnityEvents entre eux. C'était comme essayer de brancher une prise sur une autre prise.
+
+#### Tentative #2 : Le UnityEventListener
+
+```csharp
+public class UnityEventListener {
+    public UnityEvent targetEvent;    // L'événement à écouter
+    public UnityEvent onTriggered;    // Quoi faire
+}
+```
+
+**L'idée** : un composant "pont" qui écoute un événement et en déclenche un autre.
+
+**Résultat** : Unity refuse de sérialiser des références vers des UnityEvents. Le champ targetEvent reste désespérément vide dans l'inspecteur.
+
+#### Tentative #3 : Les événements nommés
+
+```csharp
+EventBus.Subscribe("ManagerStarted", line.Display);
+EventBus.Subscribe("DoorOpened", line.Display);
+```
+
+**L'idée** : un système global d'événements avec des noms en string.
+
+**Résultat** : Ça marche ! Mais adieu la configuration visuelle. Retour au code en dur et aux magic strings. Exactement ce que je voulais éviter.
+
+#### Et tant d'autres...
+
+J'ai tenté pas mal de choses, ça m'a carrément **tendu**, je suis devenu excécrable.
+Et puis ça m'est venu en me préparant un petit dwitche de frustration.
+
+### Eureka !
+
+Et si au lieu de référencer l'événement _directement_, je référençais **le composant qui le contient + le nom du champ** ?
+
+```csharp
+[System.Serializable]
+public class UnityEventReference {
+    public Component targetComponent;  // Le GameObject qui a l'événement
+    public string eventFieldName;     // "managerStartEvent", "OnDoorOpened"...
+
+    public UnityEvent GetEvent() {
+        return targetComponent.GetType()
+            .GetField(eventFieldName)
+            ?.GetValue(targetComponent) as UnityEvent;
+    }
+}
+```
+
+Soudain, tout devient possible :
+- Glisser-déposer n'importe quel composant
+- Enfin cibler les événements correctment
+
+Je me suis même payé le luxe de demander à Claude de me vibe coder un petit helper pour l'inspecteur : il va chercher uniquement les `UnityEvent` de l'objet que je lui passe, et il me les propose tranquillou dans un dropdown.
+
+### Le résultat
+
+Dix heures plus tard, j'avais enfin mon système :
+
+```csharp
+public class DialogueLine {
+    public UnityEventReference startTrigger;  // Porte qui s'ouvre
+    public UnityEventReference stopTrigger;   // Joueur qui clique
+}
+```
+
+Dans l'Inspector :
+![Dropdown des UnityEventReference]({{ "/assets/images/event-triggers.png" | relative_url }})
+
+## Conclusion
+
+Tout ça pour dire que j'ai mis dix heures à afficher deux phrases l'une après l'autre. J'ai le début d'un système assez robuste et modulable... **Mais à quel prix ?**
